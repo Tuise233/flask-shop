@@ -10,10 +10,11 @@
     <nav>
         <a href="{{ url_for('shop.home') }}">首页</a>
         {% if current_user.is_authenticated %}
-            {% if current_user.is_admin     %}
+            {% if current_user.is_admin %}
                 <a href="{{ url_for('admin.users') }}">管理用户</a>
                 <a href="{{ url_for('admin.products') }}">管理药品</a>
             {% endif %}
+            <a href="{{ url_for('cart.cart') }}">购物车</a>
             <a href="{{ url_for('auth.logout') }}">登出</a>
         {% else %}
             <a href="{{ url_for('auth.login') }}">登录</a>
@@ -21,14 +22,16 @@
         {% endif %}
     </nav>
 
-    {% with message = get_flashed_messages() %}
-        {% if messages %}
-            {% for item in messages %}
-                <div class="flash">{{ item }}</div>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
-    {% block content %}
-    {% endblock %}
+    <div class="container">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="flash">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        {% block content %}
+        {% endblock %}
+    </div>
 </body>
 </html>

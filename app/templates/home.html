@@ -1,5 +1,20 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>这里是主页</h1>
+<h1>药品列表</h1>
+<div class="products">
+    {% for product in products %}
+    <div class="product">
+        <h2>{{ product.name }}</h2>
+        <p class="description">{{ product.description }}</p>
+        <div class="product-info">
+            <p class="price">¥{{ product.price }}</p>
+            <p class="stock">库存: {{ product.stock }}件</p>
+        </div>
+        {% if current_user.is_authenticated %}
+            <a href="{{ url_for('cart.add_to_cart', product_id=product.id) }}" class="btn">加入购物车</a>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
 {% endblock %}

@@ -18,9 +18,10 @@ def create_app():
     # flask_login
     login_manager.init_app(app)
 
-    from app.routes import auth, shop
+    from app.routes import auth, shop, cart
     app.register_blueprint(auth.bp)
     app.register_blueprint(shop.bp)
+    app.register_blueprint(cart.bp)
 
     with app.app_context():
         db.create_all()
