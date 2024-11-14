@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_required, current_user
-from app.models import Product
+from app.models import Product, User
 from app import db
 
 bp = Blueprint('admin', __name__)
@@ -75,4 +75,71 @@ def delete_product(id):
     db.session.delete(product)
     db.session.commit()
     flash('商品删除成功')
-    return redirect(url_for('admin.products')) 
+    return redirect(url_for('admin.products'))
+
+@bp.route('/admin/users')
+@login_required
+def users():
+    if not current_user.is_admin:
+        flash('你没有管理员权限')
+        return redirect(url_for('shop.home'))
+    users = User.query.all()
+    return render_template('admin/users.html', users=users)
+
+@bp.route('/admin/users/<int:id>/toggle_status')
+@login_required
+def toggle_user_status(id):
+    if not current_user.is_admin:
+        flash('你没有管理员权限')
+        return redirect(url_for('shop.home'))
+        
+    user = User.query.get_or_404(id)
+    
+    # 不能封禁自己
+    if user.id == current_user.id:
+        flash('不能修改自己的状态')
+        return redirect(url_for('admin.users'))
+        
+    # 切换用户状态
+    user.status = 'ban' if user.status == 'active' else 'active'
+    db.session.commit()
+    flash(f'用户 {user.username} 状态已更新')
+    return redirect(url_for('admin.users'))
+
+@bp.route('/admin/users/<int:id>/toggle_admin')
+@login_required
+def toggle_user_admin(id):
+    if not current_user.is_admin:
+        flash('你没有管理员权限')
+        return redirect(url_for('shop.home'))
+        
+    user = User.query.get_or_404(id)
+    
+    # 不能修改自己的管理员状态
+    if user.id == current_user.id:
+        flash('不能修改自己的管理员状态')
+        return redirect(url_for('admin.users'))
+        
+    user.is_admin = not user.is_admin
+    db.session.commit()
+    flash(f'用户 {user.username} 管理员权限已更新')
+    return redirect(url_for('admin.users'))
+
+@bp.route('/admin/users/<int:id>/delete')
+@login_required
+def delete_user(id):
+    if not current_user.is_admin:
+        flash('你没有管理员权限')
+        return redirect(url_for('shop.home'))
+        
+    user = User.query.get_or_404(id)
+    
+    # 不能删除自己
+    if user.id == current_user.id:
+        flash('不能删除自己的账号')
+        return redirect(url_for('admin.users'))
+        
+    db.session.delete(user)
+    db.session.commit()
+    flash(f'用户 {user.username} 已删除')
+    return redirect(url_for('admin.users')) 

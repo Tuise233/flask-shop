@@ -12,6 +12,7 @@
         {% if current_user.is_authenticated %}
             {% if current_user.is_admin %}
                 <a href="{{ url_for('admin.products') }}">管理商品</a>
+                <a href="{{ url_for('admin.users') }}">管理用户</a>
             {% endif %}
             <a href="{{ url_for('cart.cart') }}">购物车</a>
             <a href="{{ url_for('auth.logout') }}">登出</a>

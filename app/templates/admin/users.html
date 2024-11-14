@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="admin-container">
+    <div class="admin-header">
+        <h1>用户管理</h1>
+    </div>
+
+    <div class="admin-users">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>用户名</th>
+                    <th>状态</th>
+                    <th>权限</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>{{ user.id }}</td>
+                    <td>{{ user.username }}</td>
+                    <td>
+                        <span class="status-badge {% if user.status == 'active' %}status-active{% else %}status-banned{% endif %}">
+                            {{ '正常' if user.status == 'active' else '封禁' }}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="role-badge {% if user.is_admin %}role-admin{% else %}role-user{% endif %}">
+                            {{ '管理员' if user.is_admin else '普通用户' }}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="btn-group">
+                            {% if user.id != current_user.id %}
+                                <a href="{{ url_for('admin.toggle_user_status', id=user.id) }}" 
+                                   class="btn btn-small {% if user.status == 'active' %}btn-danger{% else %}btn-success{% endif %}">
+                                    {{ '封禁' if user.status == 'active' else '解封' }}
+                                </a>
+                                <a href="{{ url_for('admin.toggle_user_admin', id=user.id) }}" 
+                                   class="btn btn-small {% if user.is_admin %}btn-warning{% else %}btn-info{% endif %}">
+                                    {{ '取消管理员' if user.is_admin else '设为管理员' }}
+                                </a>
+                                <a href="{{ url_for('admin.delete_user', id=user.id) }}" 
+                                   class="btn btn-small btn-danger"
+                                   onclick="return confirm('确定要删除该用户吗？')">删除</a>
+                            {% else %}
+                                <span class="text-muted">当前登录用户</span>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %} 
