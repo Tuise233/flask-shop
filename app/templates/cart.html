@@ -1,29 +1,47 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>我的购物车</h1>
-{% if carts %}
-    <div class="cart-items">
-        {% for item in carts %}
-        <div class="cart-item">
-            <div class="cart-item-info">
-                <h3>{{ item.product.name }}</h3>
-                <p>数量: {{ item.amount }}</p>
-                <p>单价: ¥{{ item.product.price }}</p>
+<div class="cart-container">
+    <h1>我的购物车</h1>
+    {% if carts %}
+        <div class="cart-items">
+            {% for item in carts %}
+            <div class="cart-item">
+                <div class="cart-item-info">
+                    <h3>{{ item.product.name }}</h3>
+                    <p class="cart-item-details">
+                        <span>单价: ¥{{ item.product.price }}</span>
+                    </p>
+                </div>
+                <div class="cart-item-actions">
+                    <div class="amount-control">
+                        <input type="number" name="amount" value="{{ item.amount }}" min="1" class="amount-input" 
+                               form="form-{{ item.id }}">
+                    </div>
+                    <div class="action-buttons">
+                        <form id="form-{{ item.id }}" action="{{ url_for('cart.update_cart', cart_id=item.id) }}" 
+                              method="POST" class="amount-form">
+                            <button type="submit" class="btn btn-small">更新</button>
+                        </form>
+                        <a href="{{ url_for('cart.remove_from_cart', cart_id=item.id) }}" 
+                           class="btn btn-small btn-danger"
+                           onclick="return confirm('确定要删除这个商品吗？')">删除</a>
+                    </div>
+                </div>
             </div>
-            <div class="cart-item-total">
-                <p class="total-price">总价: ¥{{ item.product.price * item.amount }}</p>
-            </div>
+            {% endfor %}
         </div>
-        {% endfor %}
-    </div>
-    <div class="checkout-section">
-        <a href="{{ url_for('cart.buy') }}" class="btn">立即购买</a>
-    </div>
-{% else %}
-    <div class="empty-cart">
-        <p>购物车还是空的，去逛逛吧~</p>
-        <a href="{{ url_for('shop.home') }}" class="btn">去购物</a>
-    </div>
-{% endif %}
+        <div class="cart-summary">
+            <div class="total-price">
+                总价: ¥{{ total_price }}
+            </div>
+            <a href="{{ url_for('cart.buy') }}" class="btn">立即购买</a>
+        </div>
+    {% else %}
+        <div class="empty-cart">
+            <p>购物车还是空的，去逛逛吧~</p>
+            <a href="{{ url_for('shop.home') }}" class="btn">去购物</a>
+        </div>
+    {% endif %}
+</div>
 {% endblock %} 

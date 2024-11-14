@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="admin-container">
+    <div class="admin-header">
+        <h1>添加商品</h1>
+    </div>
+    
+    <form method="POST" class="admin-form">
+        <div class="form-group">
+            <label>商品名称</label>
+            <input type="text" name="name" required>
+        </div>
+        
+        <div class="form-group">
+            <label>描述</label>
+            <textarea name="description" required></textarea>
+        </div>
+        
+        <div class="form-group">
+            <label>价格</label>
+            <input type="number" name="price" step="0.01" required>
+        </div>
+        
+        <div class="form-group">
+            <label>库存</label>
+            <input type="number" name="stock" required>
+        </div>
+        
+        <div class="form-group">
+            <div class="status-toggle">
+                <input type="checkbox" name="status" id="status">
+                <label for="status">上架</label>
+            </div>
+        </div>
+        
+        <div class="form-actions">
+            <a href="{{ url_for('admin.products') }}" class="btn btn-secondary">返回</a>
+            <button type="submit" class="btn">添加</button>
+        </div>
+    </form>
+</div>
+{% endblock %} 
