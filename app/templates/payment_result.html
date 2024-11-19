@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-md mx-auto bg-white rounded-lg shadow-md p-6">
+        {% if payment_success %}
+        <div class="text-center mb-6">
+            <i class="fas fa-check-circle text-green-500 text-5xl mb-4"></i>
+            <h2 class="text-2xl font-bold text-gray-800">支付成功</h2>
+            <p class="text-gray-600 mt-2">订单金额: ¥{{ amount }}</p>
+        </div>
+        {% else %}
+        <div class="text-center mb-6">
+            <i class="fas fa-times-circle text-red-500 text-5xl mb-4"></i>
+            <h2 class="text-2xl font-bold text-gray-800">支付异常</h2>
+            <p class="text-red-600 mt-2">{{ error_message }}</p>
+        </div>
+        {% endif %}
+
+        <div class="flex flex-col space-y-4">
+            <a href="{{ url_for('cart.cart') }}" 
+               class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded text-center">
+                返回购物车
+            </a>
+            <a href="{{ url_for('shop.home') }}" 
+               class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded text-center">
+                返回主页
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %} 
